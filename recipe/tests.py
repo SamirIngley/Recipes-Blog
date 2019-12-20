@@ -3,11 +3,25 @@ from django.test import TestCase
 
 from .models import Page
 
+import unittest
+from django.test import TestCase, Client
+from django.contrib.auth.models import User
+from accounts.views import SignUpView
+
 def create_page(name, text):
     """
     Create a  with the given `author` and 'content' Negative or Positive.
     """
     return Page.objects.create(author = author, context = text)
+
+
+class Basics(TestCase):
+    def test_true_is_true(self):
+        """ Tests if True is equal to True. Should always pass. """
+        self.assertEqual(True, True)
+
+    def test_home_page_status_code(self):
+        response = self.client.get('/signup.html')
 
 class IndexViewTests(TestCase):
     def test_no_pages(self):
