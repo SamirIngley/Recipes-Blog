@@ -25,7 +25,7 @@ SECRET_KEY = 'hello'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'https://git.heroku.com/recipesblog2.git']'
 
 
 # Application definition
@@ -132,7 +132,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'staticfiles')
 
 # recipe app settings
 RECIPE_PAGE_TITLE_MAX_LENGTH = 600
