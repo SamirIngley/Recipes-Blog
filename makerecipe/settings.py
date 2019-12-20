@@ -25,7 +25,7 @@ SECRET_KEY = 'hello'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'https://git.heroku.com/recipesblog2.git']'
+ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'https://git.heroku.com/recipesblog2.git']
 
 
 # Application definition
