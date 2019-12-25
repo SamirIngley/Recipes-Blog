@@ -27,6 +27,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['0.0.0.0','127.0.0.1', 'https://git.heroku.com/recipesblog2.git', 'recipes-blog.herokuapp.com']
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Application definition
 
@@ -53,6 +55,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'makerecipe.urls'
+
 
 
 TEMPLATES = [

@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.utils.text import slugify
 from django.utils import timezone
 from django.contrib.auth.models import User
+# from PIL import *
 
 
 class Page(models.Model):
@@ -20,6 +21,7 @@ class Page(models.Model):
                                    help_text="The date and time this page was created. Automatically generated when the model saves.")
     modified = models.DateTimeField(auto_now=True,
                                     help_text="The date and time this page was updated. Automatically generated when the model updates.")
+    # cover = models.ImageField(upload_to='images/')
 
     def __str__(self):
         return self.title
