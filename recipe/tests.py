@@ -1,81 +1,50 @@
-from django.urls import reverse
+# wiki/tests.py
 from django.test import TestCase
-
-from .models import Page
-
-import unittest
-from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from accounts.views import SignUpView
+from recipe.models import Page
 
-def create_page(name, text):
-    """
-    Create a  with the given `author` and 'content' Negative or Positive.
-    """
-    return Page.objects.create(author = author, context = text)
-
-
-class Basics(TestCase):
+class RecipeTestCase(TestCase):
     def test_true_is_true(self):
         """ Tests if True is equal to True. Should always pass. """
         self.assertEqual(True, True)
 
-    def test_home_page_status_code(self):
-        response = self.client.get('/signup.html')
+    def test_page_slugify_on_save(self):
+        """ Tests the slug generated when saving a Page. """
+        # Author is a required field in our model.
+        # Create a user for this test and save it to the test database.
+        user = User()
+        user.save()
 
-class IndexViewTests(TestCase):
-    def test_no_pages(self):
-        """
-        If no s exist, an appropriate message is displayed.
-        """
-        response = self.client.get(reverse('polls:index'))
+        # Create and save a new page to the test database.
+        page = Page(title="My Test Page", content="test", author=user)
+        page.save()
+
+        # Make sure the slug that was generated in Page.save()
+        # matches what we think it should be.
+        self.assertEqual(page.slug, "my-test-page")
+
+class PageListViewTests(TestCase):
+    def test_multiple_pages(self):
+        # Make some test data to be displayed on the page.
+        user = User.objects.create()
+
+        Page.objects.create(title="My Test Page", content="test", author=user)
+        Page.objects.create(title="Another Test Page", content="test", author=user)
+
+        # Issue a GET request to the MakeWiki homepage.
+        # When we make a request, we get a response back.
+        response = self.client.get('/')
+
+        # Check that the response is 200 OK.
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "No polls are available.")
-        self.assertQuerysetEqual(response.context['latest_page_list'], [])
 
-    def test_past_page(self):
-        """
-        pages with a pub_date in the past are displayed on the
-        index .
-        """
-        create_page(page_text="Past page.", days=-30)
-        response = self.client.get(reverse('polls:index'))
+        # Check that the number of pages passed to the template
+        # matches the number of pages we have in the database.
+        responses = response.context['pages']
+        self.assertEqual(len(responses), 2)
+
         self.assertQuerysetEqual(
-            response.context['latest_page_list'],
-            ['<page: Past page.>']
-        )
-
-    def test_future_page(self):
-        """
-        pages with a pub_date in the future aren't displayed on
-        the index .
-        """
-        create_page(page_text="Future page.", days=30)
-        response = self.client.get(reverse('polls:index'))
-        self.assertContains(response, "No polls are available.")
-        self.assertQuerysetEqual(response.context['latest_page_list'], [])
-
-    def test_future_page_and_past_page(self):
-        """
-        Even if both past and future pages exist, only past pages
-        are displayed.
-        """
-        create_page(page_text="Past page.", days=-30)
-        create_page(page_text="Future page.", days=30)
-        response = self.client.get(reverse('polls:index'))
-        self.assertQuerysetEqual(
-            response.context['latest_page_list'],
-            ['<page: Past page.>']
-        )
-
-    def test_two_past_pages(self):
-        """
-        The pages index  may display multiple pages.
-        """
-        create_page(page_text="Past page 1.", days=-30)
-        create_page(page_text="Past page 2.", days=-5)
-        response = self.client.get(reverse('polls:index'))
-        self.assertQuerysetEqual(
-            response.context['latest_page_list'],
-            ['<page: Past page 2.>', '<page: Past page 1.>']
+            responses,
+            ['<Page: My Test Page>', '<Page: Another Test Page>'],
+            ordered=False
         )
