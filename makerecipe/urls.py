@@ -28,6 +28,7 @@ urlpatterns = [
 
     # recipe App
     path('', include('recipe.urls')),
+    path('api/', include('api.urls')),
 
     # Accounts
     path('accounts/', include('accounts.urls')),
